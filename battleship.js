@@ -97,7 +97,7 @@ const fireMissle = function(board, coords){
   let column = coords[1];
   let row = coords[0];
 
-  //Check target status
+  //Check target status, return matching result.
   if (board[row][column] === 0){
     board[row][column] = 3;
     console.log('You missed!');
@@ -123,6 +123,7 @@ module.exports = {
 
 //Game
 
+//Testing
 mem.player1.board = genBoard(10);
 console.log(mem.player1);
 placeShips('carrier',[0,0],false);
