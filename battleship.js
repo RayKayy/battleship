@@ -1,5 +1,3 @@
-const ALPHA = ['A', 'B', 'C', 'D', 'E', 'F', 'G', 'H', 'I', 'J', 'K', 'L', 'M', 'N', 'O', 'P', 'Q', 'R', 'S',
-  'T', 'U', 'V', 'W', 'X', 'Y', 'Z'];
 // An object acting as default game state.
 const D_STATE = {
   player1: {
@@ -11,11 +9,26 @@ const D_STATE = {
 };
 // An object containing ships and its length.
 const SHIPS = {
-  carrier: 5,
-  battleship: 4,
-  cruiser: 3,
-  submarine: 3,
-  destroyer: 2,
+  carrier: {
+    id: 'ca',
+    size: 5,
+  },
+  battleship: {
+    id: 'ba',
+    size: 4,
+  },
+  cruiser: {
+    id: 'cr',
+    size: 3,
+  },
+  submarine: {
+    id: 'su',
+    size: 3,
+  },
+  destroyer: {
+    id: 'de',
+    size: 2,
+  },
 };
 
 // Creates a memory object from D_STATE
@@ -25,9 +38,9 @@ const mem = JSON.parse(JSON.stringify(D_STATE));
 // Generate Board => Takes in a number Returns an array of arrays
 function genBoard(size) {
   const board = [];
-  for (let x = 0; x < size; x++) {
+  for (let x = 0; x < size; x += 1) {
     const row = [];
-    for (let y = 0; y < size; y++) {
+    for (let y = 0; y < size; y += 1) {
       row.push(0);
     }
     board.push(row);
@@ -39,15 +52,14 @@ function genBoard(size) {
 // Place ships according to coords(array), and checks for invalid placements.
 // Updates board if valid, else logs reason and return to previous board state.
 const placeShips = function place(ship, coords, orient, player = 'player1') {
-
-  const length = SHIPS[ship];
+  const length = SHIPS[ship].size;
   const column = coords[0];
   const row = coords[1];
   let { board } = mem[player];
   const state = Array.from(board);
 
   if (mem[player].shipsPlaced.includes(ship)) {
-    // console.log('Ship type already placed.')
+    console.log('Ship type already placed.');
     return 'Ship type already placed';
   }
 
@@ -58,37 +70,39 @@ const placeShips = function place(ship, coords, orient, player = 'player1') {
       console.log('Out of range.');
       return 'Out of range';
     }
-    for (let i = 0; i < length; i++) {
+    for (let i = 0; i < length; i += 1) {
       // Check if tile occupied, if so revert back to previous board state.
-      if (board[coords[0]][coords[1] + i] === 1) {
+      if (board[coords[0]][coords[1] + i] !== 0) {
         board = state;
         console.log('Another ship is in the way');
         return 'Another ship is in the way';
       }
-      board[coords[0]][coords[1] + i] = 1;
+      board[coords[0]][coords[1] + i] = SHIPS[ship].id;
     }
     mem[player].shipsPlaced.push(ship);
     console.log(`${ship} placed`);
+    return `${ship} placed`;
   }
 
   // If orient is false, place ship veritically.
-  else if (!orient) {
+  if (!orient) {
     // Check if ship will go out of range.
     if ((board[column + (length - 1)]) === undefined) {
       console.log('Out of range.');
       return 'Out of range';
     }
-    for (let i = 0; i < length; i++) {
+    for (let i = 0; i < length; i += 1) {
       // Check if tile occupied, if so revert back to previous board state.
-      if (board[coords[0] + i][coords[1]] === 1)  {
+      if (board[coords[0] + i][coords[1]] !== 0) {
         console.log('Another ship is in the way');
         board = state;
         return 'Another ship is in the way';
       }
-      board[coords[0] + i][coords[1]] = 1;
+      board[coords[0] + i][coords[1]] = SHIPS[ship].id;
     }
     mem[player].shipsPlaced.push(ship);
     console.log(`${ship} placed`);
+    return `${ship} placed`;
   }
 };
 
@@ -103,7 +117,7 @@ const fireMissle = function fire(board, coords) {
     temp[row][column] = 3;
     console.log('You missed!');
     return 'You missed!';
-  } if (board[row][column] === 1) {
+  } if (typeof board[row][column] === 'string') {
     temp[row][column] = 2;
     console.log('BOOM! HIT!');
     return 'BOOM! HIT!';
@@ -125,10 +139,11 @@ module.exports = {
 // Testing
 mem.player1.board = genBoard(10);
 console.log(mem.player1);
-placeShips('carrier',[0,0],false);
-placeShips('battleship',[7,7],true);
+placeShips('battleship', [0, 0], false);
+placeShips('carrier', [3, 3], false);
 console.log(mem.player1);
 fireMissle(mem.player1.board, [0, 0]);
 fireMissle(mem.player1.board, [0, 1]);
-fireMissle(mem.player1.board, [0, 1]);
+fireMissle(mem.player1.board, [3, 3]);
+fireMissle(mem.player1.board, [7, 3]);
 console.log(mem.player1);
