@@ -1,0 +1,20 @@
+<!DOCTYPE html>
+<html>
+<head>
+<link rel="stylesheet" href="/main.css">
+<title>BATTLESHIP</title>
+</head>
+<body>
+  <% for (let row of board) { %>
+    <% let column = 1; %>
+    <div class='row'>
+    <% for (let e of row) { %>
+      <form class='grid' action='/fire' method='POST'>
+      <input class='butt, <%=e%>' type='submit' value='<%=e%>'>
+      </form>
+      <% column += 1 %>
+    <% } %>
+    </div>
+  <% } %>
+</body>
+</html>

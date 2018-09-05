@@ -32,7 +32,7 @@ const SHIPS = {
 };
 
 // Creates a memory object from D_STATE
-const mem = JSON.parse(JSON.stringify(D_STATE));
+// state
 
 
 // Generate Board => Takes in a number Returns an array of arrays
@@ -51,14 +51,14 @@ function genBoard(size) {
 
 // Place ships according to coords(array), and checks for invalid placements.
 // Updates board if valid, else logs reason and return to previous board state.
-const placeShips = function place(ship, coords, orient, player = 'player1') {
+const placeShips = function place(ship, coords, orient, state, player = 'player1') {
   const length = SHIPS[ship].size;
   const column = coords[0];
   const row = coords[1];
-  let { board } = mem[player];
-  const state = Array.from(board);
+  let { board } = state[player];
+  const tmp = Array.from(board);
 
-  if (mem[player].shipsPlaced.includes(ship)) {
+  if (state[player].shipsPlaced.includes(ship)) {
     console.log('Ship type already placed.');
     return 'Ship type already placed';
   }
@@ -73,13 +73,13 @@ const placeShips = function place(ship, coords, orient, player = 'player1') {
     for (let i = 0; i < length; i += 1) {
       // Check if tile occupied, if so revert back to previous board state.
       if (board[coords[0]][coords[1] + i] !== 0) {
-        board = state;
+        board = tmp;
         console.log('Another ship is in the way');
         return 'Another ship is in the way';
       }
       board[coords[0]][coords[1] + i] = SHIPS[ship].id;
     }
-    mem[player].shipsPlaced.push(ship);
+    state[player].shipsPlaced.push(ship);
     console.log(`${ship} placed`);
     return `${ship} placed`;
   }
@@ -95,12 +95,12 @@ const placeShips = function place(ship, coords, orient, player = 'player1') {
       // Check if tile occupied, if so revert back to previous board state.
       if (board[coords[0] + i][coords[1]] !== 0) {
         console.log('Another ship is in the way');
-        board = state;
+        board = tmp;
         return 'Another ship is in the way';
       }
       board[coords[0] + i][coords[1]] = SHIPS[ship].id;
     }
-    mem[player].shipsPlaced.push(ship);
+    state[player].shipsPlaced.push(ship);
     console.log(`${ship} placed`);
     return `${ship} placed`;
   }
@@ -130,20 +130,22 @@ const fireMissle = function fire(board, coords) {
 // Export for unit testing.
 module.exports = {
   D_STATE,
+  // SHIPS,
   genBoard,
   placeShips,
+  fireMissle,
 };
 
 // Game
 
 // Testing
-mem.player1.board = genBoard(10);
-console.log(mem.player1);
-placeShips('battleship', [0, 0], false);
-placeShips('carrier', [3, 3], false);
-console.log(mem.player1);
-fireMissle(mem.player1.board, [0, 0]);
-fireMissle(mem.player1.board, [0, 1]);
-fireMissle(mem.player1.board, [3, 3]);
-fireMissle(mem.player1.board, [7, 3]);
-console.log(mem.player1);
+// mem.player1.board = genBoard(10);
+// console.log(mem.player1);
+// placeShips('battleship', [0, 0], false, mem);
+// placeShips('carrier', [3, 3], false);
+// console.log(mem.player1);
+// fireMissle(mem.player1.board, [0, 0]);
+// fireMissle(mem.player1.board, [0, 1]);
+// fireMissle(mem.player1.board, [3, 3]);
+// fireMissle(mem.player1.board, [7, 3]);
+// console.log(mem.player1);
