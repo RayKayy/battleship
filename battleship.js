@@ -31,6 +31,8 @@ const SHIPS = {
   },
 };
 
+const ID = ['ca', 'ba', 'cr', 'su', 'de'];
+
 // Creates a memory object from D_STATE
 // state
 
@@ -114,11 +116,11 @@ const fireMissle = function fire(board, coords) {
 
   // Check target status, return matching result.
   if (board[row][column] === 0) {
-    temp[row][column] = 3;
+    temp[row][column] = 'MISS';
     console.log('You missed!');
     return 'You missed!';
-  } if (typeof board[row][column] === 'string') {
-    temp[row][column] = 2;
+  } if (ID.includes(board[row][column])) {
+    temp[row][column] = 'HIT';
     console.log('BOOM! HIT!');
     return 'BOOM! HIT!';
   }
@@ -130,7 +132,7 @@ const fireMissle = function fire(board, coords) {
 // Export for unit testing.
 module.exports = {
   D_STATE,
-  // SHIPS,
+  SHIPS,
   genBoard,
   placeShips,
   fireMissle,

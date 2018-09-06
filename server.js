@@ -11,13 +11,17 @@ const { SHIPS } = battleship;
 const { fireMissle } = battleship;
 const { genBoard } = battleship;
 const { placeShips } = battleship;
+const ROWS = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ'.split('');
 
 const mem = JSON.parse(JSON.stringify(D_STATE));
 mem.player1.board = genBoard(10);
-console.log(mem);
+mem.player2.board = genBoard(10);
+const placeBoard = genBoard(10);
+// mem.player1.enemyBoard = genBoard(10);
+// console.log(mem.player1.board);
 
-placeShips('battleship', [0, 0], false, mem);
-placeShips('carrier', [0, 1], false, mem);
+// placeShips('battleship', [0, 0], false, mem);
+// placeShips('carrier', [2, 1], true, mem);
 
 const app = express();
 const PORT = 8080; // default port 8080
@@ -31,17 +35,40 @@ app.use(morgan('dev'));
 app.use(express.static(__dirname + '/stylesheets'));
 
 app.get('/', (req, res) => {
-  console.log(mem);
+  console.log(mem.player1.board);
   const templateVars = {
     board: mem.player1.board,
+    alpha: ROWS,
   };
   res.render('home', templateVars);
 });
 
-app.post('/fire', (req, res) => {
-  console.log(req.body);
-  fireMissle(mem.player1.board, [0, 0]);
+// Render board setup page
+app.get('/place', (req, res) => {
+  console.log(mem.player2.board);
+  const templateVars = {
+    board: placeBoard,
+    alpha: ROWS,
+  };
+  res.render('place_ship', templateVars);
+});
+
+app.post('/fire/:id', (req, res) => {
+  console.log(req.params.id);
+  const y = ROWS.indexOf(req.params.id.slice(0, 1));
+  const x = Number(req.params.id.slice(1)) - 1;
+  console.log(y, x);
+  fireMissle(mem.player1.board, [y, x]);
   res.redirect('/');
+});
+
+app.post('/place/:id', (req, res) => {
+  console.log(req.params.id);
+  const y = ROWS.indexOf(req.params.id.slice(0, 1));
+  const x = Number(req.params.id.slice(1)) - 1;
+  console.log(y, x);
+  placeShips('battleship', [y, x], true, mem, 'player2');
+  res.redirect('/place');
 });
 
 app.listen(PORT, () => {
