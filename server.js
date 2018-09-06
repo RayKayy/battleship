@@ -16,7 +16,7 @@ const ROWS = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ'.split('');
 const mem = JSON.parse(JSON.stringify(D_STATE));
 mem.player1.board = genBoard(10);
 mem.player2.board = genBoard(10);
-const placeBoard = genBoard(10);
+// const placeBoard = genBoard(10);
 // mem.player1.enemyBoard = genBoard(10);
 // console.log(mem.player1.board);
 
@@ -27,6 +27,8 @@ const app = express();
 const PORT = 8080; // default port 8080
 
 app.set('view engine', 'ejs');
+
+let shiptype;
 
 app.use(bodyParser.urlencoded({ extended: true }));
 app.use(cookieParser());
@@ -47,7 +49,7 @@ app.get('/', (req, res) => {
 app.get('/place', (req, res) => {
   console.log(mem.player2.board);
   const templateVars = {
-    board: placeBoard,
+    board: mem.player2.board,
     alpha: ROWS,
   };
   res.render('place_ship', templateVars);
@@ -67,7 +69,13 @@ app.post('/place/:id', (req, res) => {
   const y = ROWS.indexOf(req.params.id.slice(0, 1));
   const x = Number(req.params.id.slice(1)) - 1;
   console.log(y, x);
-  placeShips('battleship', [y, x], true, mem, 'player2');
+  placeShips(shiptype, [y, x], true, mem, 'player2');
+  res.redirect('/place');
+});
+
+app.post('/type/:ship', (req, res) => {
+  shiptype = req.params.ship;
+  console.log(shiptype);
   res.redirect('/place');
 });
 
