@@ -106,6 +106,7 @@ const placeShips = function place(ship, coords, orient, state, player = 'player1
     console.log(`${ship} placed`);
     return `${ship} placed`;
   }
+  return 'No conditions met?!';
 };
 
 // A function to fire and check if it hits/miss/targeted.
@@ -118,14 +119,14 @@ const fireMissle = function fire(board, coords) {
   if (board[row][column] === 0) {
     temp[row][column] = 'MISS';
     console.log('You missed!');
-    return 'You missed!';
+    return 'MISS';
   } if (ID.includes(board[row][column])) {
     temp[row][column] = 'HIT';
     console.log('BOOM! HIT!');
-    return 'BOOM! HIT!';
+    return 'HIT';
   }
   console.log('Targeted before');
-  return 'Targeted before';
+  return 'TGT';
 };
 
 

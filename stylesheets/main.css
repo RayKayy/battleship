@@ -1,18 +1,19 @@
-/* input {
-  height: 90%;
-  width: 90%;
-} */
+.ship {
+  align-content: center;
+  height: 100%;
+  width: 100%;
+}
 
 .grid {
   position: relative;
   display: inline-block;
-  height: 3vh;
-  width: 2vw;
-  margin: 0px;
+  height: 5vh;
+  width: 5vw;
+  margin: 3px;
   background-color: lightblue;
 }
-
-/* .butt {
+/*
+.butt {
   position: absolute;
   bottom: 0px;
   width: 100%;
@@ -25,11 +26,6 @@
 
 .ba {
   background-color: greenyellow;
-}
-
-.row {
-  position: relative;
-  margin-top: 1px;
 }
 
 .HIT {

@@ -5,20 +5,32 @@
 <title>BATTLESHIP</title>
 </head>
 <body>
-<h1>PLACE YOUR SHIPS<h1>
+<h1>PLACE YOUR SHIPS</h1>
 <% let y = 0 %>
+<table>
+    <tr>
+    <% alpha.forEach((x) => { %>
+      <% if (alpha.indexOf(x) < board.length) { %>
+          <td><%=x%></td>
+      <% } %>
+    <% }); %>
+    </tr>
   <% for (let row of board) { %>
-    <div class='row'>
+    <tr class='row'>
     <% let x = 1 %>
+    <td><%=y + 1%></td>
     <% for (let e of row) { %>
-      <form class='grid' action='/place/<%=alpha[y]%><%=x%>' method='POST'>
-      <input class='butt, <%=e%>' type='submit' value='<%=e%>'>
+      <td class='grid'>
+      <form action='/place/<%=alpha[y]%><%=x%>' method='POST'>
+      <input class='ship, <%=e%>' type='submit' value='<%=e%>'>
       </form>
+      </td>
       <% x++ %>
     <% } %>
-    </div>
+    </tr>
     <% y++ %>
   <% } %>
+</table>
   <form class='chship' action='/type/battleship' method='POST'>
   <input class='butt' type='submit' value='battleship'>
   </form>
@@ -34,5 +46,10 @@
   <form class='chship' action='/type/destroyer' method='POST'>
   <input class='butt' type='submit' value='destroyer'>
   </form>
+  <div>
+    <form class='orient' action='/orient' method='POST'>
+    <input class='butt' type='submit' value='<%=status%>'>
+    </form>
+  </div>
 </body>
 </html>

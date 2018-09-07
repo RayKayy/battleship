@@ -12,7 +12,7 @@
     <% let x = 1 %>
     <% for (let e of row) { %>
       <form class='grid' action='/fire/<%=alpha[y]%><%=x%>' method='POST'>
-      <input class='butt, <%=e%>' type='submit' value='<%=0%>'>
+      <input class='butt, <%=e%>' type='submit' value='<%=e%>'>
       </form>
       <% x++ %>
     <% } %>
